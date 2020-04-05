@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import space.testapp.tictacserver.model.User;
 import space.testapp.tictacserver.model.UserStatus;
+import space.testapp.tictacserver.utils.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,24 +34,17 @@ public class UserService {
             .setLogin(login)
             .setStatus(UserStatus.authorized)
             .setToken(token.getToken())
-            .setIp(request.getRemoteAddr())
-            .setPort(request.getRemotePort());
-        userDao.insert(user);
+            .setIp(WebUtils.getClientIp(request))
+            .setPort(loginDto.getPort());
+        try {
+            userDao.insert(user);
+        } catch (UserException e) {
+            if (e.getErrorCode() == UserErrorCode.login_already_exists) {
+                userDao.update(user);
+            }
+        }
         log.info("user registered: {}", user);
         return token;
-    }
-
-    public TokenDto loginUser(LoginDto loginDto, HttpServletRequest request) throws UserException {
-        val login = loginDto.getLogin();
-        checkLogin(login);
-        val user = userDao.select(login);
-        TokenDto newToken = new TokenDto();
-        user.setIp(request.getRemoteAddr())
-            .setPort(request.getRemotePort())
-            .setToken(newToken.getToken());
-        userDao.update(user);
-        return newToken;
-
     }
 
     private void checkLogin(String login) throws UserException {

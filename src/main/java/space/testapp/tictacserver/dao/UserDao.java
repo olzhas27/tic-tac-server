@@ -23,7 +23,6 @@ public class UserDao {
         try {
             userMapper.insert(user);
         } catch (UncategorizedSQLException e) {
-            log.warn("", e);
             throw new UserException(UserErrorCode.login_already_exists);
         }
     }

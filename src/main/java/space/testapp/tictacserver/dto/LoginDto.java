@@ -7,4 +7,7 @@ import lombok.Data;
 public class LoginDto {
     @JsonProperty("login")
     private String login;
+
+    @JsonProperty("port")
+    private int port;
 }

@@ -29,14 +29,6 @@ public class UserController {
         return response;
     }
 
-    @GetMapping
-    public TokenDto login(@RequestBody LoginDto loginDto, HttpServletRequest request) throws UserException {
-        log.info("request: {}", loginDto);
-        val response = userService.loginUser(loginDto, request);
-        log.info("response: {}", response);
-        return response;
-    }
-
     @DeleteMapping
     public Response logout(@RequestBody LogOutDto logOutDto) {
         log.info("request: {}", logOutDto);
