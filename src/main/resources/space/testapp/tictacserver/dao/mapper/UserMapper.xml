@@ -41,7 +41,7 @@
             token = #{user.token},
             ip = #{user.ip},
             port = #{user.port}
-        where id = #{user.id}
+        where login = #{user.login}
     </update>
 
     <update id="removeToken">
@@ -51,4 +51,16 @@
             status = #{user.status}
         where token = #{user.token}
     </update>
+
+    <select id="selectByToken" resultType="space.testapp.tictacserver.model.User">
+        select
+            id,
+            login,
+            status,
+            token,
+            ip,
+            port
+        from users
+        where token = #{token}
+    </select>
 </mapper>
