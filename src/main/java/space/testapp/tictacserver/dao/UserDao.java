@@ -42,4 +42,8 @@ public class UserDao {
     public void removeToken(User user) {
         userMapper.removeToken(user);
     }
+
+    public User selectByToken(String token) {
+        return userMapper.selectByToken(token);
+    }
 }

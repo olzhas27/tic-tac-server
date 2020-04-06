@@ -4,4 +4,56 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="space.testapp.tictacserver.dao.mapper.GameMapper">
 
+    <insert id="insert">
+        insert into games (
+            session_id,
+            player_x,
+            player_o,
+            status,
+            field_json
+        ) values (
+            #{game.sessionId, jdbcType=VARCHAR},
+            #{game.playerX, jdbcType=NUMERIC},
+            #{game.playerO, jdbcType=NUMERIC},
+            #{game.status, jdbcType=VARCHAR},
+            #{game.fieldJson, jdbcType=VARCHAR}
+        )
+    </insert>
+
+
+    <select id="selectByUserId" resultType="space.testapp.tictacserver.model.Game">
+        select
+            session_id as "sessionId",
+            player_x as "playerX",
+            player_o as "playerO",
+            winner as "winner",
+            status as "status",
+            field_json as "fieldJson"
+        from games
+        where player_x = #{userId} OR player_o = #{userId} and status &lt;&gt; 'COMPLETED'
+    </select>
+
+    <select id="select" resultType="space.testapp.tictacserver.model.Game">
+        select
+            session_id as "sessionId",
+            player_x as "playerX",
+            player_o as "playerO",
+            winner as "winner",
+            status as "status",
+            field_json as "fieldJson"
+        from games
+        where session_id = #{sessionId}
+    </select>
+
+    <update id="update">
+        update games
+        set
+            session_id = #{game.sessionId},
+            player_x = #{game.playerX},
+            player_o = #{game.playerO},
+            winner = #{game.winner},
+            status = #{game.status},
+            field_json = #{game.fieldJson}
+        where session_id = #{game.sessionId}
+    </update>
 </mapper>
