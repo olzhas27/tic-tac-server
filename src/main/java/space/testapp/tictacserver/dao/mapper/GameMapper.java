@@ -12,5 +12,5 @@ public interface GameMapper {
 
     void update(@Param("game") Game game);
 
-    Game selectByUserIdNotCompletedGame(@Param("game")int userId);
+    Game selectByUserIdNotCompletedGame(@Param("userId") int userId);
 }
