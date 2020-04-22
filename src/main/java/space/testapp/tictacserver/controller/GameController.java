@@ -27,7 +27,7 @@ public class GameController {
     }
 
     @PostMapping("/{sessionId}")
-    public Response step(@RequestBody StepDto stepDto) {
-        return gameService.step(stepDto);
+    public Response step(@PathVariable String sessionId, @RequestBody StepDto stepDto) {
+        return gameService.step(sessionId, stepDto);
     }
 }

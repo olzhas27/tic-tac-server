@@ -71,42 +71,52 @@ public class GameService {
         return gameSessionDto;
     }
 
-    public Response step(StepDto stepDto) {
+    public Response step(String sessionId, StepDto stepDto) {
         val user = userDao.selectByToken(stepDto.getToken());
         log.info("user {} making step: {}", user, stepDto);
-        val game = gameDao.get(stepDto.getSessionId());
-        val field = new Field(game.getFieldJson());
-        if (field.hasEmptyCell()) {
-            val role = user.getId() == game.getPlayerX() ? PlayerRole.X : PlayerRole.O;
-            if (field.setStep(stepDto.getX(), stepDto.getY(), role)) {
-                switch (role) {
-                    case X:
-                        game.setStatus(GameStatus.WAITING_FOR_O);
-                        break;
-                    case O:
-                        game.setStatus(GameStatus.WAITING_FOR_X);
-                        break;
-                }
-                game.setFieldJson(field.toString());
-                val winner = field.getWinner();
-                if (winner != null) {
-                    switch (winner) {
+        val game = gameDao.get(sessionId);
+        if (isUserStep(user, game)) {
+            val field = new Field(game.getFieldJson());
+            if (field.hasEmptyCell()) {
+                val role = user.getId() == game.getPlayerX() ? PlayerRole.X : PlayerRole.O;
+                val stepMade = field.setStep(stepDto.getX(), stepDto.getY(), role);
+                if (stepMade) {
+                    switch (role) {
                         case X:
-                            game.setWinner(game.getPlayerX());
+                            game.setStatus(GameStatus.WAITING_FOR_O);
                             break;
                         case O:
-                            game.setWinner(game.getPlayerO());
+                            game.setStatus(GameStatus.WAITING_FOR_X);
                             break;
                     }
-                    game.setStatus(GameStatus.COMPLETED);
+                    game.setFieldJson(field.toString());
+                    val winner = field.getWinner();
+                    if (winner != null) {
+                        switch (winner) {
+                            case X:
+                                game.setWinner(game.getPlayerX());
+                                break;
+                            case O:
+                                game.setWinner(game.getPlayerO());
+                                break;
+                        }
+                        game.setStatus(GameStatus.COMPLETED);
+                    }
                 }
+            } else {
+                game.setStatus(GameStatus.COMPLETED)
+                    .setWinner(0);
             }
+            gameDao.update(game);
+            log.info("game updated: {}", game);
         } else {
-            game.setStatus(GameStatus.COMPLETED)
-                .setWinner(0);
+            log.warn("user {} tries to make step {}", user, stepDto);
         }
-        gameDao.update(game);
-        log.info("game updated: {}", game);
         return new Response();
+    }
+
+    private boolean isUserStep(User user, Game game) {
+        return (user.getId() == game.getPlayerX() && game.getStatus() == GameStatus.WAITING_FOR_X)
+            || (user.getId() == game.getPlayerO() && game.getStatus() == GameStatus.WAITING_FOR_O);
     }
 }
