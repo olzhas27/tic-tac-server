@@ -33,7 +33,9 @@ public class GameService {
         val existingGame = gameDao.get(user.getId());
         if (!isNull(existingGame)) {
             val role = user.getId() == existingGame.getPlayerX() ? PlayerRole.X : PlayerRole.O;
-            return new GameSessionDto(existingGame.getSessionId(), existingGame.getFieldJson(), existingGame.getStatus(), role);
+            val gameSession = new GameSessionDto(existingGame.getSessionId(), existingGame.getFieldJson(), existingGame.getStatus(), role);
+            log.info("returning to player {} existing game: {}", user, gameSession);
+            return gameSession;
         }
         if (playerX == null || playerX.equals(user)) {
             user.setStatus(UserStatus.pending);
@@ -42,21 +44,21 @@ public class GameService {
             return new Response();
         } else {
             val role = PlayerRole.O;
-
-            val gameSessionDto = new GameSessionDto()
+            val gameSession = new GameSessionDto()
                 .setSessionId(UUID.randomUUID().toString())
                 .setRole(role)
                 .setGameFieldJson(new Field().toString())
                 .setStatus(GameStatus.WAITING_FOR_X);
 
             val game = new Game()
-                .setSessionId(gameSessionDto.getSessionId())
+                .setSessionId(gameSession.getSessionId())
                 .setPlayerX(playerX.getId())
                 .setPlayerO(user.getId())
-                .setStatus(gameSessionDto.getStatus())
-                .setFieldJson(gameSessionDto.getGameFieldJson());
+                .setStatus(gameSession.getStatus())
+                .setFieldJson(gameSession.getGameFieldJson());
             gameDao.insert(game);
-            return gameSessionDto;
+            log.info("returning new game session: {}", gameSession);
+            return gameSession;
         }
     }
 
@@ -64,11 +66,14 @@ public class GameService {
         val user = userDao.selectByToken(token);
         val game = gameDao.get(sessionId);
         val role = user.getId() == game.getPlayerX() ? PlayerRole.X : PlayerRole.O;
-        return new GameSessionDto(sessionId, game.getFieldJson(), game.getStatus(), role);
+        val gameSessionDto = new GameSessionDto(sessionId, game.getFieldJson(), game.getStatus(), role);
+        log.info("returning to player {} game session: {}", user, gameSessionDto);
+        return gameSessionDto;
     }
 
     public Response step(StepDto stepDto) {
         val user = userDao.selectByToken(stepDto.getToken());
+        log.info("user {} making step: {}", user, stepDto);
         val game = gameDao.get(stepDto.getSessionId());
         val field = new Field(game.getFieldJson());
         if (field.hasEmptyCell()) {
@@ -101,6 +106,7 @@ public class GameService {
                 .setWinner(0);
         }
         gameDao.update(game);
+        log.info("game updated: {}", game);
         return new Response();
     }
 }
