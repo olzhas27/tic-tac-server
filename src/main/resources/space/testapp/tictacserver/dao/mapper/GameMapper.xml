@@ -30,7 +30,7 @@
             status as "status",
             field_json as "fieldJson"
         from games
-        where player_x = #{userId} OR player_o = #{userId} and status &lt;&gt; 'COMPLETED'
+        where player_x = #{userId} OR player_o = #{userId}
     </select>
 
     <select id="select" resultType="space.testapp.tictacserver.model.Game">
@@ -43,6 +43,18 @@
             field_json as "fieldJson"
         from games
         where session_id = #{sessionId}
+    </select>
+
+    <select id="selectByUserIdNotCompletedGame" resultType="space.testapp.tictacserver.model.Game">
+        select
+            session_id as "sessionId",
+            player_x as "playerX",
+            player_o as "playerO",
+            winner as "winner",
+            status as "status",
+            field_json as "fieldJson"
+        from games
+        where (player_x = #{userId} OR player_o = #{userId}) and status &lt;&gt; 'COMPLETED'
     </select>
 
     <update id="update">

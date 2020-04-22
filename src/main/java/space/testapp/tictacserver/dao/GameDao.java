@@ -19,6 +19,10 @@ public class GameDao {
         return gameMapper.selectByUserId(userId);
     }
 
+    public Game getNotCompletedGame(int userId) {
+        return gameMapper.selectByUserIdNotCompletedGame(userId);
+    }
+
     public Game get(String sessionId) {
         return gameMapper.select(sessionId);
     }

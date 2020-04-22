@@ -30,7 +30,7 @@ public class GameService {
 
     public synchronized Response ready(TokenDto tokenDto) {
         val user = userDao.selectByToken(tokenDto.getToken());
-        val existingGame = gameDao.get(user.getId());
+        val existingGame = gameDao.getNotCompletedGame(user.getId());
         if (!isNull(existingGame)) {
             val role = user.getId() == existingGame.getPlayerX() ? PlayerRole.X : PlayerRole.O;
             val gameSession = new GameSessionDto(existingGame.getSessionId(), existingGame.getFieldJson(), existingGame.getStatus(), role);

@@ -11,4 +11,6 @@ public interface GameMapper {
     Game select(@Param("sessionId") String sessionId);
 
     void update(@Param("game") Game game);
+
+    Game selectByUserIdNotCompletedGame(@Param("game")int userId);
 }
