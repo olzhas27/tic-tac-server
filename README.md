@@ -75,8 +75,6 @@ post /game/{sessionId}
 body:
 
 {
-    "sessionId" : "someSessionId",
-    
     "token" : "someToken",
     
     "x" : 0,

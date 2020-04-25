@@ -7,8 +7,6 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class StepDto {
-    @JsonProperty("sessionId")
-    private String sessionId;
     @JsonProperty("token")
     private String token;
     @JsonProperty("x")
