@@ -119,4 +119,10 @@ public class GameService {
         return (user.getId() == game.getPlayerX() && game.getStatus() == GameStatus.WAITING_FOR_X)
             || (user.getId() == game.getPlayerO() && game.getStatus() == GameStatus.WAITING_FOR_O);
     }
+
+    public Response cleanUpGames() {
+        gameDao.cleanUpGames();
+        log.info("games cleanup completed");
+        return new Response();
+    }
 }

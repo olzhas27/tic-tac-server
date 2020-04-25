@@ -30,4 +30,9 @@ public class GameController {
     public Response step(@PathVariable String sessionId, @RequestBody StepDto stepDto) {
         return gameService.step(sessionId, stepDto);
     }
+
+    @DeleteMapping
+    public Response cleanUpGames() {
+        return gameService.cleanUpGames();
+    }
 }

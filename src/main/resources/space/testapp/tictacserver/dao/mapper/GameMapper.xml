@@ -19,6 +19,13 @@
             #{game.fieldJson, jdbcType=VARCHAR}
         )
     </insert>
+    <delete id="remove">
+        delete from games
+        where session_id = #{gameSessionId}
+    </delete>
+    <delete id="cleanUpGames">
+        delete from games
+    </delete>
 
 
     <select id="selectByUserId" resultType="space.testapp.tictacserver.model.Game">

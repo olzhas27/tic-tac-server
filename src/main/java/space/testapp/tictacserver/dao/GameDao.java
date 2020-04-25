@@ -11,23 +11,31 @@ import space.testapp.tictacserver.model.Game;
 public class GameDao {
     private final GameMapper gameMapper;
 
-    public void insert(Game game) {
+    public synchronized void insert(Game game) {
         gameMapper.insert(game);
     }
 
-    public Game get(int userId) {
+    public synchronized Game get(int userId) {
         return gameMapper.selectByUserId(userId);
     }
 
-    public Game getNotCompletedGame(int userId) {
+    public synchronized Game getNotCompletedGame(int userId) {
         return gameMapper.selectByUserIdNotCompletedGame(userId);
     }
 
-    public Game get(String sessionId) {
+    public synchronized Game get(String sessionId) {
         return gameMapper.select(sessionId);
     }
 
-    public void update(Game game) {
+    public synchronized void update(Game game) {
         gameMapper.update(game);
+    }
+
+    public void remove(String gameSessionId) {
+        gameMapper.remove(gameSessionId);
+    }
+
+    public void cleanUpGames() {
+        gameMapper.cleanUpGames();
     }
 }
