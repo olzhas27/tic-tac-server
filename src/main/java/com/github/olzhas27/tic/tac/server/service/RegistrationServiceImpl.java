@@ -51,6 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (isOffline(enemy)) {
+            waitingPlayers.offer(new Player(playerId, Role.X));
             lastPollTimeMap.remove(enemy.getId());
             return ErrorResponse.WAITING_FOR_NEXT_PLAYER;
         }
