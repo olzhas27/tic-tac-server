@@ -1,9 +1,2 @@
 server:
-  port: 8082
-
-spring:
-  datasource:
-    url: jdbc:sqlite:./tictacdb.sqlite3
-    driver: org.sqlite.JDBC
-    username:
-    password:
+  port: 8080
