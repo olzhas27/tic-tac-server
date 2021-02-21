@@ -2,85 +2,24 @@
 Релизация сервера для игры "Крестики нолики" в режиме онлайн
 
 
-Авторизация на сервере:
+Авторизация на сервере: 
 
-
-post /user
-
+POST /register
 body:
+```json
 {
-    "login" : "someLogin",
-    "port" : 8080
+    "playerId" : "3c3c3fc4-0bc8-467c-96d8-ac4144213789"
 }
-
-response:
-{ 
-    "token" : "someToken" 
-}
-
-Выйти из сервера:
-
-delete /user
-body:
+```
+успешная авторизация:
+```json
 {
-    "token" : "someToken"
+    "gameId" : "1825b01d-2dc8-44df-85c1-47bc1679d63d"
 }
-
-response:
+```
+в случае ожидания противника, нужно повторить запрос позже:
+```json
 {
+  "errorMessage": "THERE IS NO PLAYER"
 }
-
-Сообщить серверу о готовности играть:
-
-post /game/ready
-body:
-{
-    "token"" : "someToken"
-}
-
-response:
-{
-
-"sessionId" : "someSessionId",
-
-"status" : "WAITING_FOR_X",
-
-"role" : "X",
-
-"gameFieldJson" : ""
-
-}
-
-Получить данные игровой сессии
-
-get /game/{sessionId}?token=someToken
-
-response:
-{
-
-"sessionId" : "someSessionId",
-
-"status" : "WAITING_FOR_X",
-
-"role" : "X",
-
-"gameFieldJson" : ""
-
-}
-
-Выполнить ход:
-
-post /game/{sessionId}
-
-body:
-
-{
-    "token" : "someToken",
-    
-    "x" : 0,
-    
-    "y" : 0,
-    
-}
-
-response: { }
+```
