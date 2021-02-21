@@ -9,4 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class RegisterResponse implements Response {
     @JsonProperty("gameId")
     private final String gameId;
+
+    @JsonProperty("role")
+    private final String role;
 }

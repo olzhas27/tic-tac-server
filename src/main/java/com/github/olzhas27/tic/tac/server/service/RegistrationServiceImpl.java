@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         final Game existingGame = gameContainer.searchGameByPlayer(playerId);
         if (nonNull(existingGame)) {
-            return new RegisterResponse(existingGame.getId());
+            return new RegisterResponse(existingGame.getId(), existingGame.getPlayer(playerId).getRole().name());
         }
 
         final Player enemy = waitingPlayers.poll();
@@ -60,7 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         final Game game = new Game(enemy, currentPlayer);
         final String newGameId = gameContainer.save(game);
 
-        return new RegisterResponse(newGameId);
+        return new RegisterResponse(newGameId, currentPlayer.getRole().name());
     }
 
     private boolean isOffline(Player player) {
