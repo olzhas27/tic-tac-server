@@ -6,13 +6,19 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
+import static java.util.Objects.nonNull;
+
 public class Game {
     @Setter
+    @Getter
     private String id;
+    @Getter
     private final Player player1;
+    @Getter
     private final Player player2;
     private Map<Point, Role> field;
+    @Getter
+    private Role lastTurn;
 
     public Game(Player player1, Player player2) {
         if (player1.equals(player2)) {
@@ -31,5 +37,25 @@ public class Game {
             }
         }
         return field;
+    }
+
+    public Player getPlayer(String playerId) {
+        if (playerId.equals(player1.getId())) {
+            return player1;
+        }
+        if (playerId.equals(player2.getId())) {
+            return player2;
+        }
+        return null;
+    }
+
+    public synchronized boolean makeStepAt(Point point, Role step) {
+        final Role currentStep = field.get(point);
+        if (nonNull(currentStep)) {
+            return false;
+        }
+        field.put(point, step);
+        lastTurn = step;
+        return true;
     }
 }

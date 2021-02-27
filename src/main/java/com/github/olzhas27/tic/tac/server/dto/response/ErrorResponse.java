@@ -9,6 +9,8 @@ import lombok.ToString;
 public class ErrorResponse implements Response {
     public static final ErrorResponse INVALID_GAME_ID_FORMAT = new ErrorResponse("GAME ID MUST BE UUID");
     public static final ErrorResponse WAITING_FOR_NEXT_PLAYER = new ErrorResponse("THERE IS NO PLAYER");
+    public static final Response NO_GAME = new ErrorResponse("THERE IS NO GAME SESSION");
+    public static final Response SYNCHRONIZE_ERROR = new ErrorResponse("Synchronization error");
 
     public static ErrorResponse validationErrorWith(String conditions) {
         return new ErrorResponse("Validation error. Response must feet next conditions: " + conditions);

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
     private final GameService gameService;
 
-    @PostMapping
+    @PostMapping("/step")
     public Response makeStep(@RequestBody StepRequest stepRequest) {
         return gameService.makeStep(stepRequest);
     }
