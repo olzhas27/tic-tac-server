@@ -31,7 +31,11 @@ test {
 }
 
 bootJar {
+	archiveName("tic-tac-server.jar")
 	manifest {
 		attributes 'Start-Class': 'com.github.olzhas27.tic.tac.server.TicTacServerApplication'
+		if (project.hasProperty("buildVersion")) {
+			attributes 'Build-Version' : "${project.buildVersion}"
+		}
 	}
 }
