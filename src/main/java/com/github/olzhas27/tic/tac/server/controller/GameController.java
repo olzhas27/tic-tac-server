@@ -19,7 +19,7 @@ public class GameController {
         return gameService.makeStep(stepRequest);
     }
 
-    @GetMapping
+    @GetMapping("/wait")
     public Response getEnemyStep(@RequestBody WaitingEnemyRequest waitingEnemyRequest) {
         return gameService.getEnemyStep(waitingEnemyRequest);
     }

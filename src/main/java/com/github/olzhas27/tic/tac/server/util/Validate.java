@@ -9,6 +9,10 @@ public class Validate {
         throw new IllegalStateException("This is utility class");
     }
 
+    public static boolean isNotUUID(String str) {
+        return !isUUID(str);
+    }
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean isUUID(String str) {
         if (isBlank(str)) {
