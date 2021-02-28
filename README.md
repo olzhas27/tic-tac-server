@@ -1,86 +1,109 @@
 # tic-tac-server
-Релизация сервера для игры "Крестики нолики" в режиме онлайн
 
+Релизация сервера для игры "Крестики нолики" в режиме онлайн
 
 Авторизация на сервере:
 
+POST /register body:
 
-post /user
-
-body:
+```json
 {
-    "login" : "someLogin",
-    "port" : 8080
+  "playerId": "3c3c3fc4-0bc8-467c-96d8-ac4144213789"
 }
+```
 
-response:
-{ 
-    "token" : "someToken" 
-}
+успешная авторизация:
 
-Выйти из сервера:
-
-delete /user
-body:
+```json
 {
-    "token" : "someToken"
+  "gameId": "1825b01d-2dc8-44df-85c1-47bc1679d63d",
+  "role": "X"
 }
+```
 
-response:
+в случае ожидания противника, нужно повторить запрос позже:
+
+```json
 {
+  "errorMessage": "THERE IS NO PLAYER"
 }
+```
 
-Сообщить серверу о готовности играть:
+Отправка хода:
+POST /game/step body:
 
-post /game/ready
-body:
+```json
 {
-    "token"" : "someToken"
+  "gameId": "1825b01d-2dc8-44df-85c1-47bc1679d63d",
+  "playerId": "3c3c3fc4-0bc8-467c-96d8-ac4144213789",
+  "x": 0,
+  "y": 0
 }
+```
 
-response:
+Успешный ход:
+
+```json
 {
-
-"sessionId" : "someSessionId",
-
-"status" : "WAITING_FOR_X",
-
-"role" : "X",
-
-"gameFieldJson" : ""
-
+  "gameId": "1825b01d-2dc8-44df-85c1-47bc1679d63d"
 }
+```
 
-Получить данные игровой сессии
+В случае отсутствия игровой сессии:
 
-get /game/{sessionId}?token=someToken
-
-response:
+```json
 {
-
-"sessionId" : "someSessionId",
-
-"status" : "WAITING_FOR_X",
-
-"role" : "X",
-
-"gameFieldJson" : ""
-
+  "errorMessage": "THERE IS NO GAME SESSION"
 }
+```
 
-Выполнить ход:
+В случае ошибки синхронизации:
 
-post /game/{sessionId}
-
-body:
-
+```json
 {
-    "token" : "someToken",
-    
-    "x" : 0,
-    
-    "y" : 0,
-    
+  "errorMessage": "SYNCHRONIZATION ERROR"
 }
+```
 
-response: { }
+Ожидание хода противника:
+GET /game/wait
+
+```json
+{
+  "gameId": "1825b01d-2dc8-44df-85c1-47bc1679d63d",
+  "playerId": "3c3c3fc4-0bc8-467c-96d8-ac4144213789"
+}
+```
+
+Пример ответа:
+
+```json
+{
+  "code": "O_WIN",
+  "x": 0,
+  "y": 2
+}
+```
+
+<table>
+    <thead>
+        <th>Код ответа</th>
+        <th>Значение</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>X_WIN</td><td>Победил X игрок</td></tr>
+        <tr><td>O_WIN</td><td>Победил O игрок</td></tr>
+        <tr><td>NO_WIN</td><td>Ничья</td></tr>
+        <tr><td>STILL_WAITING</td><td>Ожидание хода соперника</td></tr>
+        <tr><td>YOUR_TURN</td><td>Ваш ход</td></tr>
+    </tbody>
+</table>
+
+В случае ошибки синхронизации:
+
+```json
+{
+  "errorMessage": "SYNCHRONIZATION ERROR"
+}
+```
