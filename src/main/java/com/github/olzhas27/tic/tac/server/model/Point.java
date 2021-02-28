@@ -1,10 +1,13 @@
 package com.github.olzhas27.tic.tac.server.model;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
+@Getter
 public class Point {
-    final int x;
-    final int y;
+    private final int x;
+    private final int y;
 
     public static Point of(int x, int y) {
         return new Point(x, y);
