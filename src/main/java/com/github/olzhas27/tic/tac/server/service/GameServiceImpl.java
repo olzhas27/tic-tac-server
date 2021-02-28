@@ -50,6 +50,10 @@ public class GameServiceImpl implements GameService {
         if (isNull(player)) {
             return ErrorResponse.SYNCHRONIZE_ERROR;
         }
+        if (game.hasNotEmptyCells()) {
+            return new WaitingEnemyResponse(WaitingEnemyResponseCode.NO_WIN)
+                .setPoint(game.getLastTurn());
+        }
         final Role winner = game.getWinner();
         if (nonNull(winner)) {
             return new WaitingEnemyResponse(winner, game.getLastTurn().getPoint());
