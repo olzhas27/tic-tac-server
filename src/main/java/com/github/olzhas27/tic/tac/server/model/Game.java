@@ -63,7 +63,14 @@ public class Game {
         return true;
     }
 
+    public boolean hasNotEmptyCells() {
+        return !field.containsValue(null);
+    }
+
     public boolean waitsForPlayerStep(Player player) {
+        if (hasNotEmptyCells()) {
+            return false;
+        }
         if (isNull(lastTurn)) {
             return player.getRole() == Role.X;
         }
